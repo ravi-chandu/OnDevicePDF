@@ -1,0 +1,26 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light, clean defaults */
+:root {
+  color-scheme: light;
+}
+html, body, #root {
+  height: 100%;
+}
+body {
+  @apply bg-white text-slate-900 antialiased;
+}
+
+/* Simple card utility for tool tiles */
+.tool-card {
+    @apply rounded-2xl border border-slate-200 p-5 hover:shadow-md hover:border-slate-300 transition;
+  }
+.tool-card h3 {
+  @apply text-base font-semibold text-slate-900;
+}
+.tool-card p {
+  @apply text-sm text-slate-600 mt-1;
+}
