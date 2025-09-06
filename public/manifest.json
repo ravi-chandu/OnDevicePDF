@@ -1,10 +1,12 @@
 {
-  "name": "OnDevicePDF",
+  "name": "OnDevicePDF \u2014 Private PDF tools",
   "short_name": "OnDevicePDF",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#1F6FEB",
+  "theme_color": "#2563eb",
+  "description": "Fast, private PDF tools that run 100% in your browser.",
   "icons": [
     {
       "src": "/icon-192.png",

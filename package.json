@@ -1,6 +1,6 @@
 {
   "name": "ondevicepdf",
-  "version": "1.0.0",
+  "version": "2.0.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "jszip": "^3.10.1",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^4.8.69",
     "react": "^18.3.1",

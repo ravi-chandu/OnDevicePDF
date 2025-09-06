@@ -1,35 +1,25 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/favicon.svg" />
-    <link rel="manifest" href="/manifest.json" />
-    <title>OnDevicePDF — Fast, private PDF tools</title>
-    <meta name="description" content="Edit, merge, split, compress and organize PDFs entirely in your browser. Files never leave your device." />
-
-    <!-- GA4 Google Tag loader (env based) -->
-    <script type="module">
-      const TAG = import.meta.env.VITE_GOOGLE_TAG_ID;
-      const MEASURE = import.meta.env.VITE_GA_MEASUREMENT_ID;
-      const id = TAG || MEASURE;
-      if (id) {
-        const s = document.createElement('script');
-        s.async = true;
-        s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
-        document.head.appendChild(s);
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){ dataLayer.push(arguments); }
-        window.gtag = gtag;
-        gtag('js', new Date());
-        // For SPA we send page_view on route change in code
-        gtag('config', id, { send_page_view: false });
-      }
-    </script>
-
-  </head>
-  <body class="bg-white text-slate-900">
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/icon-192.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <title>OnDevicePDF — Fast, private PDF tools</title>
+  <meta name="description" content="Edit, merge, split, compress, organize, watermark, and convert PDFs entirely in your browser. Files never leave your device." />
+  <script>
+    if (import.meta && import.meta.env && import.meta.env.PROD && import.meta.env.VITE_GOOGLE_TAG_ID) {
+      const id = import.meta.env.VITE_GOOGLE_TAG_ID;
+      const s = document.createElement('script'); s.async = true;
+      s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`; document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); } window.gtag = gtag;
+      gtag('js', new Date()); gtag('config', id, { send_page_view: true });
+    }
+  </script>
+</head>
+<body class="bg-white text-slate-900">
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
 </html>

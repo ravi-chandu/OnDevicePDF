@@ -1,15 +1,24 @@
 import SEO from '../components/SEO.jsx'
-
 export default function About(){
   return (
-    <div className="container py-10">
-      <SEO title="About" canonical="https://www.ondevicepdf.com/about" />
-      <h1 className="text-2xl font-semibold mb-4">About OnDevicePDF</h1>
-      <p className="text-slate-700 max-w-3xl">
-        OnDevicePDF provides fast, private, and free PDF tools that run entirely in your browser.
-        No uploads, no servers touching your files — everything happens locally using WebAssembly
-        and modern JavaScript libraries.
-      </p>
-    </div>
+    <article className="prose max-w-none">
+      <SEO title="About OnDevicePDF" canonical="https://www.ondevicepdf.com/about" />
+      <h1>About OnDevicePDF</h1>
+      <p><strong>OnDevicePDF</strong> is built for students who need simple, fast, and private PDF tools. All processing happens in your browser—your files never leave your device.</p>
+      <h2>Why students choose us</h2>
+      <ul>
+        <li><strong>Privacy-first:</strong> no uploads or server storage.</li>
+        <li><strong>Speed:</strong> local processing means instant results.</li>
+        <li><strong>Free:</strong> no sign-up required.</li>
+        <li><strong>Installable:</strong> add to your phone/desktop; works offline.</li>
+      </ul>
+      <h2>Use cases</h2>
+      <ul>
+        <li>Merge handouts and notes.</li>
+        <li>Extract or rotate specific pages from assignments.</li>
+        <li>Add page numbers and watermarks for submissions.</li>
+        <li>Convert pages to images for presentations.</li>
+      </ul>
+    </article>
   )
 }

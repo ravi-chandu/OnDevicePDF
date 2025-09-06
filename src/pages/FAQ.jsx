@@ -1,20 +1,16 @@
 import SEO from '../components/SEO.jsx'
-
+import StructuredData from '../components/StructuredData.jsx'
 export default function FAQ(){
   return (
-    <div className="container py-10">
+    <article className="prose max-w-none">
       <SEO title="FAQ" canonical="https://www.ondevicepdf.com/faq" />
-      <h1 className="text-2xl font-semibold mb-4">Frequently Asked Questions</h1>
-      <div className="space-y-4 max-w-3xl">
-        <details className="card">
-          <summary className="font-medium">Do my files ever leave my device?</summary>
-          <p className="text-slate-700 mt-2">No. All processing happens in your browser.</p>
-        </details>
-        <details className="card">
-          <summary className="font-medium">Is it free?</summary>
-          <p className="text-slate-700 mt-2">Yes. No login required.</p>
-        </details>
-      </div>
-    </div>
+      <StructuredData type="FAQPage" />
+      <h1>Frequently Asked Questions</h1>
+      <h3>Do my PDFs upload to a server?</h3><p>No. All tools run entirely in your browser.</p>
+      <h3>Is it free?</h3><p>Yes. No sign-up required, and we don’t add watermarks.</p>
+      <h3>Can I use it offline?</h3><p>Yes. Install OnDevicePDF; most tools work offline.</p>
+      <h3>Is my data tracked?</h3><p>We collect basic usage analytics (page views) when enabled. PDFs are never uploaded or inspected.</p>
+      <h3>How do I install?</h3><p>When you see the install prompt, tap it. Or use your browser menu → “Add to Home Screen”.</p>
+    </article>
   )
 }

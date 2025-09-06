@@ -1,14 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
+  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}', './public/**/*.html'],
   theme: {
     extend: {
-      colors: {
-        brand: {
-          DEFAULT: '#1F6FEB',
-          dark: '#0B3D91'
-        }
-      }
+      boxShadow: { card: '0 2px 8px rgba(0,0,0,.06)' }
     }
   },
   plugins: []
