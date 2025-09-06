@@ -1,25 +1,17 @@
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
-export default function Navbar() {
+export default function Navbar(){
+  const active = ({isActive}) => "navlink " + (isActive ? "active" : "");
   return (
-    <nav className="border-b bg-white">
-      <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
-        {/* Brand acts as Home */}
-        <Link to="/" className="font-semibold text-lg flex items-center gap-2">
-          <span role="img" aria-label="logo">📄</span> OnDevicePDF
-        </Link>
-
-        {/* Right-aligned nav */}
-        <div className="flex items-center gap-6">
-          <NavLink to="/tools" className={({isActive}) => isActive ? "font-medium text-black" : "text-gray-600 hover:text-black"}>
-            Tools
-          </NavLink>
-          <NavLink to="/about" className={({isActive}) => isActive ? "font-medium text-black" : "text-gray-600 hover:text-black"}>
-            About
-          </NavLink>
-        </div>
+    <header className="header">
+      <div className="container nav">
+        <Link to="/" className="logo" style={{fontWeight:700,fontSize:'1.05rem'}}>OnDevicePDF</Link>
+        <nav className="navlinks">
+          <NavLink to="/tools" className={active}>Tools</NavLink>
+          <NavLink to="/about" className={active}>About</NavLink>
+          <NavLink to="/faq" className={active}>FAQ</NavLink>
+        </nav>
       </div>
-    </nav>
+    </header>
   );
 }

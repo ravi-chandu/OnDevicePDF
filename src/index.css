@@ -1,26 +1,22 @@
-/* src/index.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
-/* Light, clean defaults */
-:root {
-  color-scheme: light;
-}
-html, body, #root {
-  height: 100%;
-}
-body {
-  @apply bg-white text-slate-900 antialiased;
-}
-
-/* Simple card utility for tool tiles */
-.tool-card {
-    @apply rounded-2xl border border-slate-200 p-5 hover:shadow-md hover:border-slate-300 transition;
-  }
-.tool-card h3 {
-  @apply text-base font-semibold text-slate-900;
-}
-.tool-card p {
-  @apply text-sm text-slate-600 mt-1;
-}
+:root{--fg:#0f172a;--muted:#475569;--border:#e2e8f0;--bg:#ffffff;--brand:#2563eb}
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;background:var(--bg);color:var(--fg)}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:72rem;margin:0 auto;padding:1rem}
+.header{position:sticky;top:0;background:#ffffffcc;backdrop-filter:saturate(150%) blur(6px);border-bottom:1px solid var(--border);z-index:10}
+.nav{display:flex;align-items:center;justify-content:space-between;height:56px}
+.navlinks a{padding:.5rem .75rem;color:var(--muted)}
+.navlinks a.active{color:var(--fg);font-weight:600}
+.grid{display:grid;gap:1rem}
+@media(min-width:640px){.grid.sm-2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1024px){.grid.lg-3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.card{border:1px solid var(--border);border-radius:.75rem;background:#fff;padding:1rem;box-shadow:0 1px 2px rgba(0,0,0,.04);transition:box-shadow .2s, transform .02s}
+.card:hover{box-shadow:0 4px 14px rgba(2,6,23,.08)}
+.h1{font-size:clamp(1.5rem,2vw,2rem);font-weight:800;margin:.5rem 0 1rem}
+.p{color:var(--muted);margin:.25rem 0 1rem}
+.footer{border-top:1px solid var(--border);padding:1rem 0;color:var(--muted);font-size:.9rem;margin-top:2rem}
+.sticky-cta{position:sticky;bottom:0;background:#ffffffea;border-top:1px solid var(--border);padding:.75rem 1rem;display:flex;gap:.75rem;justify-content:center}
+.sticky-cta a{background:var(--brand);color:#fff;border-radius:.5rem;padding:.6rem .9rem;text-decoration:none}

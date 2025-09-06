@@ -1,10 +1,16 @@
-# ondevicepdf-ab
+# OnDevicePDF (Clean Vite + React)
 
-## Production Switch Notes
-- Canonical & sitemap now target **https://ondevicepdf.com**.
-- GA4 is wired (`G-KPHE0WPPKM`). Track events via `src/analytics.js`.
-- Add GitHub Secrets for the agent:
-  - `PSI_API_KEY` (PageSpeed API key)
-  - `GA4_PROPERTY_ID=501479420`
-  - `GA4_SA_KEY_JSON` (optional; service account JSON for GA4).
-- Run the Action **OnDevicePDF Daily Agent** to generate `/reports/latest.md`.
+Production-ready baseline with:
+- SPA routing for /, /tools, /about, /faq and 10 tool routes
+- Single GA4 tag (G-EN0MPKLVQ5) with manual SPA page_view tracking
+- Vercel SPA rewrites
+- Basic SEO (canonical, robots, sitemap, OG)
+- Service worker that bypasses Analytics
+
+## Build
+npm ci
+npm run build
+
+## Deploy (Vercel)
+Build command: npm run build
+Output dir: dist
