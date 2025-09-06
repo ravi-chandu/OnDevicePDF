@@ -1,23 +1,12 @@
-import React, { useState } from "react";
-import Dropzone from "../components/Dropzone";
-import { downloadBlob } from "../utils/pdf";
-import { compressLite } from "../utils/pdf";
+import SEO from '../components/SEO.jsx'
+import Dropzone from '../components/Dropzone.jsx'
 
-export default function CompressLite(){
-  const [file, setFile] = useState(null);
-  const onFiles = (f)=> setFile(f[0]);
-  const run = async () => {
-    if (!file) return;
-    const out = await compressLite(file);
-    downloadBlob(out, "compressed.pdf");
-  };
+export default function CompressLite() {
   return (
-    <main className="mx-auto max-w-4xl px-4 py-8">
-      <h1 className="text-2xl font-bold mb-4">Compress (Lite)</h1>
-      <Dropzone multiple={false} onFiles={onFiles}/>
-      <div className="mt-4 card p-4">
-        <button className="btn btn-primary" onClick={run}>Re-save & Download</button>
-      </div>
-    </main>
-  );
+    <div className="container py-10">
+      <SEO title="CompressLite" canonical="https://www.ondevicepdf.com/tools/compresslite" />
+      <h1 className="text-2xl font-semibold mb-6">Compress (lite) placeholder</h1>
+      <Dropzone onFiles={(files)=>console.log('files', files)} />
+    </div>
+  )
 }

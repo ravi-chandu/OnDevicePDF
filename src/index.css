@@ -2,14 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { --brand: #2c90ff; }
-html, body, #root { height: 100%; }
-.btn { @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 font-medium shadow-sm transition-all; }
-.btn-primary { @apply bg-brand-600 text-white hover:bg-brand-700; }
-.btn-outline { @apply border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl px-4 py-2; }
-.card { @apply rounded-2xl border border-slate-200 bg-white shadow-sm; }
-.card-hover:hover { @apply shadow-md -translate-y-0.5; transition: all .15s ease; }
-.drop { @apply border-2 border-dashed border-slate-300 hover:border-brand-400 rounded-2xl p-6 text-slate-600; }
-.nav-link { @apply text-slate-700 hover:text-brand-700 transition; }
-.badge { @apply inline-block rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600; }
-.tools-grid { @apply grid sm:grid-cols-2 lg:grid-cols-3 gap-4; }
+:root { color-scheme: light; }
+.container { @apply mx-auto max-w-6xl px-4; }
+.card { @apply rounded-2xl border border-slate-200 shadow-sm p-5 bg-white; }
+.btn { @apply inline-flex items-center gap-2 rounded-lg px-4 py-2 bg-brand text-white hover:bg-brand/90 transition; }
+.link { @apply text-brand hover:underline; }
+.navlink { @apply text-slate-600 hover:text-brand transition; }

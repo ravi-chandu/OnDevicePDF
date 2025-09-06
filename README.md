@@ -1,16 +1,21 @@
-# OnDevicePDF (Clean Vite + React)
+# OnDevicePDF — Vite + React (fixed build)
 
-Production-ready baseline with:
-- SPA routing for /, /tools, /about, /faq and 10 tool routes
-- Single GA4 tag (G-EN0MPKLVQ5) with manual SPA page_view tracking
-- Vercel SPA rewrites
-- Basic SEO (canonical, robots, sitemap, OG)
-- Service worker that bypasses Analytics
+- Uses `@vitejs/plugin-react` (installed) so `vite build` works on Vercel.
+- SPA rewrites via `vercel.json`.
+- Tailwind set up with `.cjs` configs only.
+- GA4 Google Tag: set **one** of these in Vercel Project → Settings → Environment Variables:
 
-## Build
-npm ci
-npm run build
+  - `VITE_GOOGLE_TAG_ID` (preferred, e.g. `G-G6ESZ135WP`)
+  - or `VITE_GA_MEASUREMENT_ID` (fallback, e.g. `G-EN0MPKLVQ5`)
 
-## Deploy (Vercel)
-Build command: npm run build
-Output dir: dist
+- One fully working tool: **Merge PDFs** (`/tools/merge`). Other tools are placeholders.
+- Service worker caches app shell and bypasses GA requests.
+
+## Scripts
+
+```bash
+npm install
+npm run dev     # local dev
+npm run build   # production build
+npm run preview
+```

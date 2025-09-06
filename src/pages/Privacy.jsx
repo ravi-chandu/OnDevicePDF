@@ -1,19 +1,14 @@
-import SEO from "../components/SEO";
+import SEO from '../components/SEO.jsx'
 
-export default function Privacy() {
+export default function Privacy(){
   return (
-    <main className="mx-auto max-w-3xl px-4">
-      <SEO title="Privacy — OnDevicePDF" description="OnDevicePDF never uploads your files. All processing occurs in your browser." canonical="https://www.ondevicepdf.com/privacy"/>
-      <section className="py-10 prose prose-slate">
-        <h1>Privacy policy</h1>
-        <p>OnDevicePDF is designed to keep your files private: <strong>PDFs never leave your device</strong>. All features run locally in your browser using client‑side code. We don’t operate a backend that stores documents.</p>
-        <h2>Analytics</h2>
-        <p>If you enable analytics (e.g., Google Tag), we only track basic usage events to improve the product. No document contents are ever sent or stored.</p>
-        <h2>Cookies</h2>
-        <p>We avoid cookies unless required by the analytics provider you choose to enable. The app itself does not require cookies.</p>
-        <h2>Contact</h2>
-        <p>Questions? Reach out via the project repository or support email listed on the website.</p>
-      </section>
-    </main>
-  );
+    <div className="container py-10">
+      <SEO title="Privacy" canonical="https://www.ondevicepdf.com/privacy" />
+      <h1 className="text-2xl font-semibold mb-4">Privacy</h1>
+      <p className="text-slate-700 max-w-3xl">
+        We do not upload, store, or view your PDFs. Analytics measure page views only and do not
+        include your file contents. You may block analytics with your browser and the app remains fully functional.
+      </p>
+    </div>
+  )
 }

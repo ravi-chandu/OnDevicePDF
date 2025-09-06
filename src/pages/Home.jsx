@@ -1,34 +1,30 @@
-import { Link } from "react-router-dom";
-import SEO from "../components/SEO";
+import { Link } from 'react-router-dom'
+import SEO from '../components/SEO.jsx'
 
-const tools = [
-  { to: "/tools/merge",    title: "Merge",    desc: "Combine multiple PDFs." },
-  { to: "/tools/split",    title: "Split",    desc: "Extract page ranges." },
-  { to: "/tools/organize", title: "Organize", desc: "Reorder and arrange pages." },
-  { to: "/tools/rotate",   title: "Rotate",   desc: "Rotate selected pages." },
-  { to: "/tools/delete",   title: "Delete",   desc: "Remove unwanted pages." },
-  { to: "/tools/compress", title: "Compress (Lite)", desc: "Quick re-save optimization." },
-  { to: "/tools/convert",  title: "Convert (Basic)", desc: "Each page to a separate PDF." },
-  { to: "/tools/text",     title: "Extract Text", desc: "Grab text content." },
-  { to: "/tools/stamp",    title: "Stamp",    desc: "Add a text watermark." },
-];
-
-export default function Home() {
+export default function Home(){
   return (
-    <main className="mx-auto max-w-6xl px-4">
-      <SEO title="OnDevicePDF — Fast, private PDF tools" description="Edit, merge, split, compress and organize PDFs entirely in your browser. Files never leave your device." canonical="https://www.ondevicepdf.com/"/>
-      <section className="py-10">
-        <h1 className="text-3xl font-bold tracking-tight">All-in-one PDF tools</h1>
-        <p className="mt-3 text-slate-600">Everything runs locally in your browser — your files never leave your device.</p>
-        <div className="tools-grid mt-6">
-          {tools.map(t=>(
-            <Link key={t.to} to={t.to} className="card card-hover p-5">
-              <h3 className="font-semibold">{t.title}</h3>
-              <p className="text-sm text-slate-600 mt-1">{t.desc}</p>
-            </Link>
-          ))}
+    <main>
+      <SEO />
+      <section className="container py-10">
+        <h1 className="text-3xl font-bold mb-3">All-in-one PDF tools</h1>
+        <p className="text-slate-600 mb-8">
+          Everything runs locally in your browser — your files never leave your device.
+        </p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <Link to="/tools/merge" className="card hover:shadow-md transition">
+            <h3 className="font-semibold">🧩 Merge</h3>
+            <p className="text-slate-600">Combine multiple PDFs.</p>
+          </Link>
+          <Link to="/tools/split" className="card hover:shadow-md transition">
+            <h3 className="font-semibold">✂️ Split</h3>
+            <p className="text-slate-600">Extract or split pages.</p>
+          </Link>
+          <Link to="/tools/organize" className="card hover:shadow-md transition">
+            <h3 className="font-semibold">🗂 Organize</h3>
+            <p className="text-slate-600">Reorder & delete pages.</p>
+          </Link>
         </div>
       </section>
     </main>
-  );
+  )
 }

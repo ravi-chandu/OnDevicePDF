@@ -1,23 +1,12 @@
-import React, { useState } from "react";
-import Dropzone from "../components/Dropzone";
-import { downloadBlob } from "../utils/pdf";
-import { convertToPages, downloadBlob } from "../utils/pdf";
+import SEO from '../components/SEO.jsx'
+import Dropzone from '../components/Dropzone.jsx'
 
-export default function ConvertBasic(){
-  const [file, setFile] = useState(null);
-  const onFiles = (f)=> setFile(f[0]);
-  const run = async () => {
-    if (!file) return;
-    const outs = await convertToPages(file);
-    outs.forEach((b,i)=> downloadBlob(b, `page-${i+1}.pdf`));
-  };
+export default function ConvertBasic() {
   return (
-    <main className="mx-auto max-w-4xl px-4 py-8">
-      <h1 className="text-2xl font-bold mb-4">Convert (Basic)</h1>
-      <Dropzone multiple={false} onFiles={onFiles}/>
-      <div className="mt-4 card p-4">
-        <button className="btn btn-primary" onClick={run}>Export pages as PDFs</button>
-      </div>
-    </main>
-  );
+    <div className="container py-10">
+      <SEO title="ConvertBasic" canonical="https://www.ondevicepdf.com/tools/convertbasic" />
+      <h1 className="text-2xl font-semibold mb-6">Convert (basic) placeholder</h1>
+      <Dropzone onFiles={(files)=>console.log('files', files)} />
+    </div>
+  )
 }
