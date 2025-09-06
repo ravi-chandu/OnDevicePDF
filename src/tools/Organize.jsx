@@ -1,49 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import Dropzone from "../components/Dropzone";
-import ThumbGrid from "../components/ThumbGrid";
-import { reorderPages, downloadBlob } from "../utils/pdf";
+import { downloadBlob } from "../utils/pdf";
+import { reorderPages } from "../utils/pdf";
 
-export default function Organize() {
-  const [file, setFile] = React.useState(null);
-  const [order, setOrder] = React.useState([]);
+export default function Organize(){
+  const [file, setFile] = useState(null);
+  const [order, setOrder] = useState([]);
 
-  async function onFiles(fs) {
-    const f = fs[0];
-    setFile(f);
-    const { PDFDocument } = await import("pdf-lib");
-    const doc = await PDFDocument.load(await f.arrayBuffer());
-    const c = doc.getPageCount();
-    setOrder([...Array(c).keys()]);
-  }
+  const onFiles = (f)=> {
+    setFile(f[0]);
+    // initial order guess for 10 pages
+    setOrder(Array.from({length: 10}, (_,i)=>i).map(n=>n));
+  };
 
-  const moveUp = (i) => setOrder(prev => i <= 0 ? prev : prev.map((n, idx) =>
-    idx === i - 1 ? prev[i] : idx === i ? prev[i - 1] : n));
-  const moveDown = (i) => setOrder(prev => i >= prev.length - 1 ? prev : prev.map((n, idx) =>
-    idx === i + 1 ? prev[i] : idx === i ? prev[i + 1] : n));
-  const remove = (i) => setOrder(prev => prev.filter((_, idx) => idx !== i));
+  const swap = (a,b)=> setOrder(o=>{
+    const copy = [...o];
+    const tmp = copy[a]; copy[a]=copy[b]; copy[b]=tmp;
+    return copy;
+  });
 
-  async function handleExport() {
-    if (!file || !order.length) return;
-    const blob = await reorderPages(file, order);
-    downloadBlob(blob, "reordered.pdf");
-  }
+  const run = async () => {
+    if (!file) return;
+    const out = await reorderPages(file, order);
+    downloadBlob(out, "reordered.pdf");
+  };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-4">
-      <Dropzone onFiles={onFiles} />
-      {order.length > 0 && (
-        <>
-          <ThumbGrid
-            items={order.map((n) => ({ label: `Page ${n + 1}` }))}
-            onMoveUp={moveUp}
-            onMoveDown={moveDown}
-            onRemove={remove}
-          />
-          <button onClick={handleExport} className="px-4 py-2 bg-blue-600 text-white rounded">
-            Export Reordered PDF
-          </button>
-        </>
-      )}
-    </div>
+    <main className="mx-auto max-w-4xl px-4 py-8">
+      <h1 className="text-2xl font-bold mb-4">Organize pages</h1>
+      <Dropzone multiple={false} onFiles={onFiles}/>
+      <p className="mt-4 text-sm text-slate-600">Tip: this demo uses a simple order list (0‑based). Replace with thumbnails if desired.</p>
+      <div className="mt-3 card p-4">
+        <div className="flex flex-wrap gap-2">
+          {order.map((n,i)=>(
+            <span key={i} className="badge">page {n+1}</span>
+          ))}
+        </div>
+        <div className="mt-3 flex gap-2">
+          <button className="btn btn-outline" onClick={()=>swap(0,1)}>Swap 1 & 2</button>
+          <button className="btn btn-primary" onClick={run}>Reorder & Download</button>
+        </div>
+      </div>
+    </main>
   );
 }

@@ -1,22 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root{--fg:#0f172a;--muted:#475569;--border:#e2e8f0;--bg:#ffffff;--brand:#2563eb}
-*{box-sizing:border-box}
-html,body,#root{height:100%}
-body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;background:var(--bg);color:var(--fg)}
-a{color:var(--brand);text-decoration:none}
-a:hover{text-decoration:underline}
-.container{max-width:72rem;margin:0 auto;padding:1rem}
-.header{position:sticky;top:0;background:#ffffffcc;backdrop-filter:saturate(150%) blur(6px);border-bottom:1px solid var(--border);z-index:10}
-.nav{display:flex;align-items:center;justify-content:space-between;height:56px}
-.navlinks a{padding:.5rem .75rem;color:var(--muted)}
-.navlinks a.active{color:var(--fg);font-weight:600}
-.grid{display:grid;gap:1rem}
-@media(min-width:640px){.grid.sm-2{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(min-width:1024px){.grid.lg-3{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.card{border:1px solid var(--border);border-radius:.75rem;background:#fff;padding:1rem;box-shadow:0 1px 2px rgba(0,0,0,.04);transition:box-shadow .2s, transform .02s}
-.card:hover{box-shadow:0 4px 14px rgba(2,6,23,.08)}
-.h1{font-size:clamp(1.5rem,2vw,2rem);font-weight:800;margin:.5rem 0 1rem}
-.p{color:var(--muted);margin:.25rem 0 1rem}
-.footer{border-top:1px solid var(--border);padding:1rem 0;color:var(--muted);font-size:.9rem;margin-top:2rem}
-.sticky-cta{position:sticky;bottom:0;background:#ffffffea;border-top:1px solid var(--border);padding:.75rem 1rem;display:flex;gap:.75rem;justify-content:center}
-.sticky-cta a{background:var(--brand);color:#fff;border-radius:.5rem;padding:.6rem .9rem;text-decoration:none}
+:root { --brand: #2c90ff; }
+html, body, #root { height: 100%; }
+.btn { @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 font-medium shadow-sm transition-all; }
+.btn-primary { @apply bg-brand-600 text-white hover:bg-brand-700; }
+.btn-outline { @apply border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl px-4 py-2; }
+.card { @apply rounded-2xl border border-slate-200 bg-white shadow-sm; }
+.card-hover:hover { @apply shadow-md -translate-y-0.5; transition: all .15s ease; }
+.drop { @apply border-2 border-dashed border-slate-300 hover:border-brand-400 rounded-2xl p-6 text-slate-600; }
+.nav-link { @apply text-slate-700 hover:text-brand-700 transition; }
+.badge { @apply inline-block rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600; }
+.tools-grid { @apply grid sm:grid-cols-2 lg:grid-cols-3 gap-4; }

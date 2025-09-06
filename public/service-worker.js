@@ -1,44 +1,34 @@
 const CACHE = 'ondevicepdf-v4';
-const ASSETS = ['/', '/index.html', '/manifest.json', '/favicon.svg'];
+const ASSETS = ['/', '/index.html'];
 
-self.addEventListener('install', (evt) => {
+self.addEventListener('install', e => {
   self.skipWaiting();
-  evt.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
 });
 
-self.addEventListener('activate', (evt) => {
-  evt.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys => Promise.all(keys.map(k => k !== CACHE && caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
 
-self.addEventListener('fetch', (evt) => {
-  const req = evt.request;
-  if (req.method !== 'GET') return;
-
-  const url = new URL(req.url);
-  const sameOrigin = url.origin === self.location.origin;
-
-  // Always bypass analytics
+self.addEventListener('fetch', e => {
+  const url = new URL(e.request.url);
   if (url.hostname.endsWith('googletagmanager.com') || url.hostname.endsWith('google-analytics.com')) {
-    evt.respondWith(fetch(req));
+    return; // bypass
+  }
+  if (e.request.method !== 'GET') return;
+  if (e.request.mode === 'navigate') {
+    e.respondWith(fetch(e.request).catch(() => caches.match('/index.html')));
     return;
   }
-
-  // SPA navigation fallback
-  if (req.mode === 'navigate' && sameOrigin) {
-    evt.respondWith(fetch(req).catch(() => caches.match('/index.html')));
-    return;
-  }
-
-  // Runtime cache for same-origin
-  if (sameOrigin) {
-    evt.respondWith(
-      caches.match(req).then(hit => {
-        const fetchPromise = fetch(req).then(res => {
-          if (res && res.ok && res.type !== 'opaque') {
-            caches.open(CACHE).then(c => c.put(req, res.clone()));
+  if (url.origin === self.location.origin) {
+    e.respondWith(
+      caches.match(e.request).then(hit => {
+        const fetchPromise = fetch(e.request).then(res => {
+          if (res && res.ok) {
+            caches.open(CACHE).then(c => c.put(e.request, res.clone()));
           }
           return res;
         }).catch(() => hit);

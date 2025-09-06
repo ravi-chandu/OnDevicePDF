@@ -1,32 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import Dropzone from "../components/Dropzone";
-import { convertBasic, downloadBlob } from "../utils/pdf";
+import { downloadBlob } from "../utils/pdf";
+import { convertToPages, downloadBlob } from "../utils/pdf";
 
-export default function ConvertBasic() {
-  const [file, setFile] = React.useState(null);
-  const [downloading, setDownloading] = React.useState(false);
-
-  async function onFiles(fs) {
-    setFile(fs[0]);
-  }
-
-  async function handleConvert() {
+export default function ConvertBasic(){
+  const [file, setFile] = useState(null);
+  const onFiles = (f)=> setFile(f[0]);
+  const run = async () => {
     if (!file) return;
-    setDownloading(true);
-    const base = file.name.replace(/\.pdf$/i, "");
-    const outs = await convertBasic(file, base);
-    for (const { name, blob } of outs) downloadBlob(blob, name);
-    setDownloading(false);
-  }
-
+    const outs = await convertToPages(file);
+    outs.forEach((b,i)=> downloadBlob(b, `page-${i+1}.pdf`));
+  };
   return (
-    <div className="max-w-xl mx-auto space-y-4">
-      <Dropzone onFiles={onFiles} />
-      {file && (
-        <button disabled={downloading} onClick={handleConvert} className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-60">
-          {downloading ? "Exporting…" : "Export each page"}
-        </button>
-      )}
-    </div>
+    <main className="mx-auto max-w-4xl px-4 py-8">
+      <h1 className="text-2xl font-bold mb-4">Convert (Basic)</h1>
+      <Dropzone multiple={false} onFiles={onFiles}/>
+      <div className="mt-4 card p-4">
+        <button className="btn btn-primary" onClick={run}>Export pages as PDFs</button>
+      </div>
+    </main>
   );
 }

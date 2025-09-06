@@ -1,42 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import Dropzone from "../components/Dropzone";
-import ThumbGrid from "../components/ThumbGrid";
-import { mergeFiles, downloadBlob } from "../utils/pdf";
+import { downloadBlob } from "../utils/pdf";
+import { mergePDFs } from "../utils/pdf";
 
-export default function PDFMerge() {
-  const [files, setFiles] = React.useState([]);
-
-  function add(filesNew) {
-    setFiles(prev => [...prev, ...filesNew]);
-  }
-  const moveUp = (i) => setFiles(prev => i <= 0 ? prev : prev.map((f, idx) =>
-    idx === i - 1 ? prev[i] : idx === i ? prev[i - 1] : f));
-  const moveDown = (i) => setFiles(prev => i >= prev.length - 1 ? prev : prev.map((f, idx) =>
-    idx === i + 1 ? prev[i] : idx === i ? prev[i + 1] : f));
-  const remove = (i) => setFiles(prev => prev.filter((_, idx) => idx !== i));
-
-  async function handleMerge() {
+export default function PDFMerge(){
+  const [files, setFiles] = useState([]);
+  const onFiles = (f)=> setFiles(prev => [...prev, ...f]);
+  const merge = async () => {
     if (!files.length) return;
-    const blob = await mergeFiles(files);
-    downloadBlob(blob, "merged.pdf");
-  }
-
+    const out = await mergePDFs(files);
+    downloadBlob(out, "merged.pdf");
+  };
   return (
-    <div className="max-w-3xl mx-auto space-y-4">
-      <Dropzone onFiles={add} />
-      {files.length > 0 && (
-        <>
-          <ThumbGrid
-            items={files.map((f, i) => ({ name: f.name }))}
-            onMoveUp={moveUp}
-            onMoveDown={moveDown}
-            onRemove={remove}
-          />
-          <button onClick={handleMerge} className="px-4 py-2 bg-blue-600 text-white rounded">
-            Merge PDFs
-          </button>
-        </>
+    <main className="mx-auto max-w-4xl px-4 py-8">
+      <h1 className="text-2xl font-bold mb-4">Merge PDFs</h1>
+      <Dropzone onFiles={onFiles}/>
+      {files.length>0 && (
+        <div className="mt-4 card p-4">
+          <p className="text-sm text-slate-600 mb-3">{files.length} files selected</p>
+          <button className="btn btn-primary" onClick={merge}>Merge & Download</button>
+        </div>
       )}
-    </div>
+    </main>
   );
 }

@@ -1,48 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import Dropzone from "../components/Dropzone";
-import { extractPages, parseRanges, downloadBlob } from "../utils/pdf";
+import { downloadBlob } from "../utils/pdf";
+import { splitPDF } from "../utils/pdf";
 
-export default function PDFSplit() {
-  const [file, setFile] = React.useState(null);
-  const [ranges, setRanges] = React.useState("1-1");
+export default function PDFSplit(){
+  const [file, setFile] = useState(null);
+  const [range, setRange] = useState("1-1");
 
-  async function onFiles(fs) {
-    const f = fs[0];
-    setFile(f);
-  }
-
-  async function handleSplit() {
+  const onFiles = (f)=> setFile(f[0]);
+  const run = async () => {
     if (!file) return;
-    const buf = await file.arrayBuffer();
-    const { PDFDocument } = await import("pdf-lib");
-    const doc = await PDFDocument.load(buf);
-    const count = doc.getPageCount();
-    const indices = parseRanges(ranges, count);
-    if (!indices.length) return alert("No valid page indices.");
-
-    const out = await extractPages(file, indices);
-    downloadBlob(out, "split.pdf");
-  }
+    const parts = range.split(",").map(r=>r.trim()).filter(Boolean);
+    const ranges = parts.map(p=>{
+      const [a,b] = p.split("-").map(n=>parseInt(n,10));
+      return [a||1, b||a||1];
+    });
+    const outs = await splitPDF(file, ranges);
+    outs.forEach((b, i)=> downloadBlob(b, `split-${i+1}.pdf`));
+  };
 
   return (
-    <div className="max-w-xl mx-auto space-y-4">
-      <Dropzone onFiles={onFiles} />
-      {file && (
-        <>
-          <label className="block">
-            <span className="font-medium">Pages to extract (e.g. 1,3-5,8)</span>
-            <input
-              className="mt-1 w-full rounded border p-2"
-              value={ranges}
-              onChange={e => setRanges(e.target.value)}
-              placeholder="1-3"
-            />
-          </label>
-          <button onClick={handleSplit} className="px-4 py-2 bg-blue-600 text-white rounded">
-            Extract
-          </button>
-        </>
-      )}
-    </div>
+    <main className="mx-auto max-w-4xl px-4 py-8">
+      <h1 className="text-2xl font-bold mb-4">Split PDF</h1>
+      <Dropzone multiple={false} onFiles={onFiles}/>
+      <div className="mt-4 card p-4 flex items-center gap-3">
+        <label className="text-sm w-40">Page ranges (e.g. 1-1, 2-3)</label>
+        <input className="border rounded-lg px-3 py-2 w-full" value={range} onChange={e=>setRange(e.target.value)}/>
+        <button className="btn btn-primary" onClick={run}>Split</button>
+      </div>
+    </main>
   );
 }

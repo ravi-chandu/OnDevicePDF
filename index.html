@@ -2,38 +2,31 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <title>OnDevicePDF — Free, Private PDF Tools</title>
-    <meta name="description" content="Merge, split, and organize PDFs 100% locally in your browser. Files never leave your device." />
-    <link rel="canonical" href="https://ondevicepdf.com/" />
-
-    <meta property="og:title" content="OnDevicePDF — Free, Private PDF Tools" />
-    <meta property="og:description" content="Merge, split, and organize PDFs 100% locally. Private by design." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://ondevicepdf.com/" />
-    <meta name="theme-color" content="#111827" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#2c90ff"/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.json" />
-    <link rel="icon" type="image/png" href="/icon-192.png" />
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-EN0MPKLVQ5"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-EN0MPKLVQ5');
-</script>
-
-
-    
-  
-  <meta property="og:image" content="https://ondevicepdf.com/og.png" />
-  <meta name="twitter:card" content="summary_large_image" />
-</head>
-  <body>
+    <title>OnDevicePDF — Fast, private PDF tools</title>
+    <meta name="description" content="Free PDF tools that run 100% on your device. Merge, split, organize and more — files never leave your browser."/>
+    <script>
+      // Optional Google Tag: set VITE_GOOGLE_TAG_ID at build time
+      (function() {
+        const id = (window && window?.__env && window.__env.GTAG) || "%VITE_GOOGLE_TAG_ID%";
+        if (id && !/%VITE_GOOGLE_TAG_ID%/.test(id)) {
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+          document.head.appendChild(s);
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          window.gtag = gtag;
+          gtag('js', new Date());
+          gtag('config', id, { send_page_view: true });
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-white text-slate-900">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
