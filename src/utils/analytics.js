@@ -1,49 +1,56 @@
 // src/utils/analytics.js
+const GA_ID = 'G-EN0MPKLVQ5'; // your GA4 measurement ID
 
-// IMPORTANT: In your public/index.html, load GA and disable auto page_view:
-// <script async src="https://www.googletagmanager.com/gtag/js?id=G-EN0MPKLVQ5"></script>
-// <script>
-//   window.dataLayer = window.dataLayer || [];
-//   function gtag(){ dataLayer.push(arguments); }
-//   gtag('js', new Date());
-//   // SPA: we will send page_view manually from React
-//   gtag('config', 'G-EN0MPKLVQ5', { send_page_view: false });
-// </script>
+let scriptInjected = false;
+let pending = [];
 
-export const GA_ID = 'G-EN0MPKLVQ5';
+// Inject gtag <script> once
+export function initGA() {
+  if (typeof window === 'undefined' || scriptInjected) return;
 
-function gtagSafe(...args) {
-  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-    window.gtag(...args);
+  // Create the dataLayer + gtag
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function gtag(){ window.dataLayer.push(arguments); };
+
+  // JS tag
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+  s.onload = () => {
+    window.gtag('js', new Date());
+    window.gtag('config', GA_ID, { send_page_view: false });
+
+    // flush queued calls
+    pending.forEach(fn => fn());
+    pending = [];
+  };
+
+  document.head.appendChild(s);
+  scriptInjected = true;
+}
+
+// Pageview helper (SPA)
+export function sendPageView(path, title) {
+  const run = () => window.gtag('config', GA_ID, {
+    page_path: path || (location.pathname + location.search),
+    page_title: title || document.title,
+  });
+
+  if (!window.gtag) {
+    initGA();
+    pending.push(run);
+  } else {
+    run();
   }
 }
 
-/** Send a page_view on route changes (SPA) */
-export function pageview(path, title) {
-  gtagSafe('event', 'page_view', {
-    page_title: title || (typeof document !== 'undefined' ? document.title : undefined),
-    page_location: typeof window !== 'undefined' ? window.location.href : undefined,
-    page_path: path,
-    send_to: GA_ID,
-  });
+// Generic event helper
+export function sendEvent(name, params = {}) {
+  const run = () => window.gtag('event', name, params);
+  if (!window.gtag) {
+    initGA();
+    pending.push(run);
+  } else {
+    run();
+  }
 }
-
-/** Alias to match existing imports in App.jsx */
-export function sendPageView(path, title) {
-  return pageview(path, title);
-}
-
-/** Generic event helper */
-export function track(event, params = {}) {
-  gtagSafe('event', event, { send_to: GA_ID, ...params });
-}
-
-// Optional convenience helpers
-export const trackUploadStart = (tool) =>
-  track('upload_start', { tool });
-
-export const trackDownload = (tool, pages) =>
-  track('download', { tool, pages_count: pages });
-
-export const trackError = (tool, message) =>
-  track('exception', { tool, description: message, fatal: false });
