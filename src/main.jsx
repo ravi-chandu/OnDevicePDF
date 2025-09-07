@@ -1,10 +1,15 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './utils/App.jsx'
-import './index.css'
+// src/main.jsx
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{navigator.serviceWorker.register('/service-worker.js').catch(()=>{})})
-}
+import './index.css';
+import App from './utils/App.jsx';
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />)
+createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>
+);
