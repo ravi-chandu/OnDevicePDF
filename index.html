@@ -1,25 +1,34 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" href="/icon-192.png" />
-  <link rel="manifest" href="/manifest.json" />
-  <title>OnDevicePDF — Fast, private PDF tools</title>
-  <meta name="description" content="Edit, merge, split, compress, organize, watermark, and convert PDFs entirely in your browser. Files never leave your device." />
-  <script>
-    if (import.meta && import.meta.env && import.meta.env.PROD && import.meta.env.VITE_GOOGLE_TAG_ID) {
-      const id = import.meta.env.VITE_GOOGLE_TAG_ID;
-      const s = document.createElement('script'); s.async = true;
-      s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`; document.head.appendChild(s);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>OnDevicePDF</title>
+
+    <!-- GA4 (loader only; SPA pageviews come from analytics.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EN0MPKLVQ5"></script>
+    <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){ dataLayer.push(arguments); } window.gtag = gtag;
-      gtag('js', new Date()); gtag('config', id, { send_page_view: true });
-    }
-  </script>
-</head>
-<body class="bg-white text-slate-900">
-  <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
-</body>
+      function gtag(){ dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-EN0MPKLVQ5', { send_page_view: false });
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- IMPORTANT: type=module so import.meta works -->
+    <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Register SW after load -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+        });
+      }
+    </script>
+  </body>
 </html>
