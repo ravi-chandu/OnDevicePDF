@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { PDFDocument } from 'pdf-lib';
 import Dropzone from '../components/Dropzone.jsx';
-import StickyActionBar from '../components/StickyActionBar.jsx'; // or StickyBar.jsx
+import StickyActionBar from '../components/StickyActionBar.jsx';
 import HowToUse from '../components/HowToUse.jsx';
 import SEO from '../components/SEO.jsx';
 import SelectionToolbar from '../components/SelectionToolbar.jsx';
@@ -12,7 +12,7 @@ export default function DeletePages(){
   const [file,setFile]=useState(null);
   // pages: [{ srcIndex, img, removed }]
   const [pages,setPages]=useState([]);
-  const [selected,setSelected]=useState(new Set()); // selection by position 0..n-1
+  const [selected,setSelected]=useState(new Set()); // selection by position
   const [busy,setBusy]=useState(false);
   const [outName,setOutName]=useState(`delete-${new Date().toISOString().slice(0,10)}.pdf`);
 
