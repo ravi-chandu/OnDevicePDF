@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { PDFDocument, degrees } from 'pdf-lib';
 import Dropzone from '../components/Dropzone.jsx';
-import StickyActionBar from '../components/StickyActionBar.jsx'; // if your file is StickyBar.jsx, swap the import
+import StickyActionBar from '../components/StickyActionBar.jsx';
 import HowToUse from '../components/HowToUse.jsx';
 import SEO from '../components/SEO.jsx';
 import SelectionToolbar from '../components/SelectionToolbar.jsx';
@@ -12,9 +12,10 @@ export default function Organize(){
   // pages: [{ srcIndex, img, removed:boolean, rotate:number }]
   const [pages, setPages] = useState([]);
   const [file, setFile] = useState(null);
-  const [selectedSrc, setSelectedSrc] = useState(new Set()); // selection by srcIndex (stable across reorder)
+  const [selectedSrc, setSelectedSrc] = useState(new Set()); // selection by srcIndex
   const [outName, setOutName] = useState(`organized-${new Date().toISOString().slice(0,10)}.pdf`);
   const [busy, setBusy] = useState(false);
+  const [reorderMode, setReorderMode] = useState(false);
   const dragFrom = useRef(null);
 
   async function onFiles([f]){
@@ -35,14 +36,14 @@ export default function Organize(){
     setPages(items);
   }
 
-  // --- selection helpers (adapter to SelectionToolbar which uses positions) ---
+  // adapt selection (positions <-> srcIndex)
   const selectedPositions = new Set(pages.map((p,i)=> selectedSrc.has(p.srcIndex) ? i : null).filter(v=>v!==null));
   function onPositionsChange(posSet){
     const s = new Set(Array.from(posSet).map(i => pages[i]?.srcIndex).filter(v=>v!==undefined));
     setSelectedSrc(s);
   }
 
-  // --- drag reordering (positions reorder the pages array) ---
+  // drag & drop (desktop)
   function onDragStart(pos){ return e=>{ dragFrom.current = pos; e.dataTransfer.effectAllowed = 'move'; }; }
   function onDragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
   function onDrop(pos){ return e=>{
@@ -58,6 +59,18 @@ export default function Organize(){
     dragFrom.current = null;
   };}
 
+  // mobile-friendly move
+  function moveByPosition(pos, delta){
+    setPages(prev=>{
+      const arr=[...prev];
+      const newPos = Math.max(0, Math.min(arr.length-1, pos+delta));
+      if(newPos===pos) return arr;
+      const [it]=arr.splice(pos,1);
+      arr.splice(newPos,0,it);
+      return arr;
+    });
+  }
+
   function toggleByPos(pos){
     const src = pages[pos].srcIndex;
     const s = new Set(selectedSrc);
@@ -65,7 +78,7 @@ export default function Organize(){
     setSelectedSrc(s);
   }
 
-  // --- preview actions ---
+  // preview actions
   function previewRotate(delta){
     if(!selectedSrc.size) return;
     setPages(prev => prev.map(p => selectedSrc.has(p.srcIndex) ? {...p, rotate: ((p.rotate + delta) % 360 + 360) % 360} : p));
@@ -98,8 +111,7 @@ export default function Organize(){
       const a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([bytes], {type:'application/pdf'}));
       a.download = outName || 'organized.pdf';
-      a.click();
-      URL.revokeObjectURL(a.href);
+      a.click(); URL.revokeObjectURL(a.href);
     } finally { setBusy(false); }
   }
 
@@ -119,31 +131,42 @@ export default function Organize(){
 
       {total>0 && (
         <>
-          {/* Top toolbar: rotate/delete (preview) */}
           <div className="flex flex-wrap items-center gap-2 mt-3">
             <SelectionToolbar total={total} selected={selectedPositions} onChange={onPositionsChange} />
             <div className="flex flex-wrap gap-2 ml-auto">
+              <button className={btn2 + (reorderMode ? ' bg-slate-100' : '')} onClick={()=>setReorderMode(v=>!v)}>
+                {reorderMode ? '✔ Reorder mode' : 'Reorder mode'}
+              </button>
               <button className={btn2} disabled={!selectedSrc.size} onClick={()=>previewRotate(-90)} title="Rotate left">⟲ Rotate Left</button>
-              <button className={btn2} disabled={!selectedSrc.size} onClick={()=>previewRotate(90)} title="Rotate right">⟳ Rotate Right</button>
+              <button className={btn2} disabled={!selectedSrc.size} onClick={()=>previewRotate(90)}  title="Rotate right">⟳ Rotate Right</button>
               <button className={btn2} disabled={!selectedSrc.size} onClick={previewDeleteSelected} title="Mark selected as deleted (preview)">Delete selected (preview)</button>
               {deletedCount>0 && <button className={btn2} onClick={restoreAll}>Restore all</button>}
             </div>
           </div>
 
-          {/* Counts */}
           <div className="text-sm text-slate-700 mt-2 mb-1">
             Remaining: <b>{remaining}</b> of <b>{total}</b>
             {deletedCount>0 && <> • Deleted (preview): <b>{deletedCount}</b></>}
           </div>
 
-          {/* Grid */}
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 mt-2">
             {pages.map((p, pos)=>(
               <div key={p.srcIndex}
                    draggable
-                   onDragStart={onDragStart(pos)}
-                   onDragOver={onDragOver}
-                   onDrop={onDrop(pos)}
+                   onDragStart={(e)=>{ dragFrom.current = pos; e.dataTransfer.effectAllowed = 'move'; }}
+                   onDragOver={(e)=>{ e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }}
+                   onDrop={(e)=>{
+                     e.preventDefault();
+                     const from = dragFrom.current;
+                     if(from==null || from===pos) return;
+                     setPages(prev=>{
+                       const arr=[...prev];
+                       const [it]=arr.splice(from,1);
+                       arr.splice(pos,0,it);
+                       return arr;
+                     });
+                     dragFrom.current = null;
+                   }}
                    className={
                      'relative border rounded overflow-hidden ' +
                      (p.removed ? 'opacity-50 grayscale ' : '') +
@@ -164,11 +187,19 @@ export default function Organize(){
                   </div>
                 )}
                 <span className="absolute top-1 right-1 text-xs bg-white/80 rounded px-1 cursor-move select-none">↕</span>
+
+                {reorderMode && (
+                  <div className="absolute inset-x-1 bottom-1 flex justify-between pointer-events-auto">
+                    <button className="text-[11px] px-1.5 py-0.5 rounded bg-white/90 border border-slate-300"
+                            onClick={(e)=>{ e.stopPropagation(); moveByPosition(pos,-1); }}>↑</button>
+                    <button className="text-[11px] px-1.5 py-0.5 rounded bg-white/90 border border-slate-300"
+                            onClick={(e)=>{ e.stopPropagation(); moveByPosition(pos, 1); }}>↓</button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
 
-          {/* Filename */}
           <div className="mt-4 border rounded p-3 bg-white shadow-sm">
             <FilenameInput value={outName} onChange={setOutName} />
           </div>
@@ -184,8 +215,8 @@ export default function Organize(){
       <div className="mt-6">
         <HowToUse steps={[
           "Drop one PDF to see thumbnails.",
-          "Drag to reorder; click to select; use Rotate/Delete (preview only).",
-          "Check labels: rotated pages show the angle; deleted pages are dimmed and tagged.",
+          "Drag to reorder (desktop) or enable Reorder mode and tap ↑/↓ (mobile).",
+          "Click tiles to select; use Rotate/Delete (preview only).",
           "When satisfied, click “Save & Download”.",
           "Privacy: everything runs in your browser — files never leave your device."
         ]} />
