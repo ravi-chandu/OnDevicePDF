@@ -1,20 +1,31 @@
-export default function ThumbGrid({ files, selected = new Set(), onToggle, onMove }) {
-  const up = (i) => i>0 && onMove?.(i, i-1);
-  const down = (i) => i<files.length-1 && onMove?.(i, i+1);
+// src/components/ThumbGrid.jsx
+import { Link } from "react-router-dom";
+
+export default function ThumbGrid({ items = [] }) {
   return (
-    <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200">
-      {files.map((f,i)=>(
-        <li key={i} className="p-3 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <input type="checkbox" checked={selected.has(i)} onChange={()=>onToggle?.(i)} />
-            <span className="font-medium">{f.name || `Page ${i+1}`}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button className="btn btn-outline" onClick={()=>up(i)}>↑</button>
-            <button className="btn btn-outline" onClick={()=>down(i)}>↓</button>
-          </div>
-        </li>
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {items.map((it) => (
+        <ToolCard key={it.href} {...it} />
       ))}
-    </ul>
+    </div>
+  );
+}
+
+function ToolCard({ href, icon, title, desc }) {
+  return (
+    <Link
+      to={href}
+      className="block rounded-xl border border-slate-200 bg-white/80 hover:bg-white shadow-sm hover:shadow-md transition p-4"
+      aria-label={title}
+    >
+      <div className="flex items-start gap-3">
+        <span className="text-xl leading-none select-none">{icon}</span>
+        <div className="min-w-0">
+          {/* ✅ Title renders once */}
+          <div className="font-semibold truncate">{title}</div>
+          <div className="text-sm text-slate-600 mt-0.5 line-clamp-2">{desc}</div>
+        </div>
+      </div>
+    </Link>
   );
 }
