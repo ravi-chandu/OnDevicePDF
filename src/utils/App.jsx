@@ -2,7 +2,6 @@
 import React, { Suspense, lazy, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
-// NOTE: App.jsx lives in src/utils, so use ../ to reach components/pages
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import { sendPageView, initGA } from "./analytics.js";
@@ -12,7 +11,6 @@ import Tools from "../pages/Tools.jsx";
 import About from "../pages/About.jsx";
 import FAQ from "../pages/FAQ.jsx";
 
-// Tools (lazy)
 const PDFMerge     = lazy(() => import("../tools/PDFMerge.jsx"));
 const PDFSplit     = lazy(() => import("../tools/PDFSplit.jsx"));
 const Organize     = lazy(() => import("../tools/Organize.jsx"));
@@ -33,9 +31,9 @@ function GAOnRouteChange() {
   return null;
 }
 
-export default function App(){
+export default function App() {
   return (
-    <div className="app min-h-screen bg-white text-gray-900">
+    <div className="min-h-screen bg-white text-gray-900">
       <Navbar />
       <GAOnRouteChange />
       <Suspense fallback={<div className="container p-6">Loading…</div>}>
@@ -43,7 +41,6 @@ export default function App(){
           <Route path="/" element={<Home />} />
           <Route path="/tools" element={<Tools />} />
 
-          {/* Tool routes */}
           <Route path="/tools/merge" element={<PDFMerge />} />
           <Route path="/tools/split" element={<PDFSplit />} />
           <Route path="/tools/organize" element={<Organize />} />
